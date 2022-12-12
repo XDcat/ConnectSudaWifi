@@ -1,102 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
-import logging
-import logging.config
-import socket
 import re
 import json
-# 第三方类
 import requests
-
-# 登录信息
-# user information
-user = "学号"
-passwd = "密码"
-# email information
-mailhost = "邮箱服务器"
-fromaddr = ""
-toaddrs = ["接受邮件地址", ]
-subject = "logger: 自动连接苏大网"
-credentials = ("发送邮箱", "发送邮箱密码")  # 用户，密码
-# log 控制台输出等级
-level_log_console = "INFO"
-
-# log 配置
-# log config
-default_config = {
-    "version": 1,  # 目前只有 1 有效，用于以后兼容性
-    "incremental": False,  # 是否在运行中时修改配置, 默认 False
-    "disable_existing_loggers": True,  # 是否禁用任何非根的所有 Logger, 默认 False
-    "formatters": {  # 格式化生成器(格式器)
-        "default": {
-            "format": "%(name)s %(asctime)s [%(filename)s %(funcName)s()] <%(levelname)s>: %(message)s",
-        },
-        "brief": {
-            "format": "%(name)s [%(funcName)s()] <%(levelname)s>: %(message)s",
-        },
-        "mail": {
-            "format": "名称: %(name)s\n时间: %(asctime)s\n文件: %(filename)s %(funcName)s() \n等级: <%(levelname)s>\n\n%(message)s",
-        }
-    },
-    "filters": {},  # 过滤器，需要自定义类，一般不会用到
-    "handlers": {
-        "console": {  # 控制台
-            "class": "logging.StreamHandler",
-            "formatter": "brief",
-            "level": level_log_console,
-            "stream": "ext://sys.stdout",
-        },
-        "file_detail": {  # 输出到文件
-            "class": "logging.handlers.RotatingFileHandler",
-            "formatter": "default",
-            "level": "DEBUG",
-            "filename": "/home/zlj/script/connect_suda_net.log",  # 必选, 文件名称
-            "encoding": "utf8",
-            "maxBytes": 10485760,  # 日志文件最大个数 1024B * 1024 * 10 = 10MB
-            "backupCount": 1,  # 日志文件最大个数
-        },
-        "mail": {  # 邮件
-            "class": "logging.handlers.SMTPHandler",
-            "formatter": "mail",
-            "mailhost": mailhost,
-            "fromaddr": fromaddr,
-            "toaddrs": toaddrs,
-            "subject": subject,
-            "credentials": credentials,  # 用户，密码
-        }
-    },
-    "loggers": {
-        "simple": {
-            "level": "DEBUG",
-            "handlers": ["console", "file_detail"],
-            "propagate": False,  # 是否传给父级
-        },
-        "email": {
-            "level": "DEBUG",
-            "handlers": ["console", "file_detail", "mail"],
-            "propagate": False,  # 是否传给父级
-        }
-    },
-}
-# 启动配置文件
-logging.config.dictConfig(default_config)
-
-logger = logging.getLogger("simple")
-logger.info("logger 配置完毕")
-email_logger = logging.getLogger("email")
-logger.info("email logger 配置完毕")
-
-
-# email_logger.info("emial logger 配置完毕(如果邮件频繁，请在邮箱中设置收信规则)")
-
-
-# 函数
-
-## 辅助函数
+from .project_config import *
 
 
 def decode_unicode(s):
-    # 将 unicode 字符串解码
+    """
+    将 unicode 字符串解码
+    """
     return s.encode('utf8').decode('unicode_escape')
 
 
@@ -117,17 +30,20 @@ def get_ip():
 
 
 def parse_msg(msg):
+    """
+    解析请求结果
+    """
     logger.debug("解析 msg: %s", msg)
     msg_json_text = re.search("\{.*\}", msg)
     res = json.loads(msg_json_text.group(0))
     return res
 
 
-## 状态
-# 从状态中可以知道对应 ip 对应的用户是谁，而注销只需要知道 ip 和用户。所以可以通过扫描所有 ip 的状态，注销任何指定用户或者指定 ip 。
-
-
 def get_status(ip=None):
+    """
+    状态
+    从状态中可以知道对应 ip 对应的用户是谁，而注销只需要知道 ip 和用户。所以可以通过扫描所有 ip 的状态，注销任何指定用户或者指定 ip 。
+    """
     if ip is None:
         ip = get_ip()
     logger.debug("获取 %s 的在线状态, 是否为本机 %s", ip, ip is not None)
@@ -148,6 +64,9 @@ def get_status(ip=None):
 
 
 def is_login(ip=None):
+    """
+    是否已经登录
+    """
     if ip is None:
         ip = get_ip()
     msg = get_status(ip)
@@ -167,18 +86,10 @@ def get_overall():
     return res
 
 
-## 登录
-# 
-# 当前状态
-# 1. 未登录，尝试登录
-#     * 登录失败 dr1003({"result":"0","msg":"******","ret_code":1})
-#         * msg == bGRhcCBhdXRoIGVycm9y, 账户密码错误
-#     * 登录成功 dr1003({"result":"1","msg":"认证成功"})
-# 2. 登录后，尝试登录
-#     * 登录失败 dr1003({"result":"0","msg":"","ret_code":2}) 
-
-
 def login(user, passwd, is_keep=False, ip=None):
+    """
+    登录网关
+    """
     url = "http://10.9.1.3:801/eportal/"
     if ip is None:
         ip = get_ip()
@@ -191,11 +102,6 @@ def login(user, passwd, is_keep=False, ip=None):
         "user_account": ",{},{}".format(keep_flag, user),
         "user_password": passwd,
         "wlan_user_ip": ip,
-        #     "wlan_user_ipv6": "",
-        #     "wlan_user_mac": "000000000000",
-        #     "wlan_ac_ip": "",
-        #     "wlan_ac_name": "",
-        #     "jsVersion": "3.3.3",
     }
     response = requests.get(url, params=payload)
     logger.debug(response)
@@ -205,9 +111,6 @@ def login(user, passwd, is_keep=False, ip=None):
     res = int(msg["result"]) == 1
     logger.debug("登录%s", "成功" if res else "失败")
     return res, msg
-
-
-## 注销
 
 
 def logout(user, ip=None):
@@ -246,9 +149,6 @@ def logout(user, ip=None):
     return res, msg
 
 
-# 登录
-
-
 def try_to_connect_net(email_flag=None):
     """
     尝试连接网络。
@@ -280,9 +180,6 @@ def try_to_connect_net(email_flag=None):
     return res
 
 
-# main
-
-
 def main():
     import sys, getopt
     argv = sys.argv[1:]
@@ -312,11 +209,3 @@ def main():
     else:
         logger.info("发送邮件")
         try_to_connect_net(0)  # 发送邮件
-
-
-# res = try_to_connect_net()
-if __name__ == "__main__":
-    # 每隔五分钟检查是否联网，如果没有联网则连接，不发送消息
-    # 每天早上 6:00 定时检查，并发送邮件查看状态信息
-    # 如果在断网了，并且自动连接了，必须发送邮件说明
-    main()

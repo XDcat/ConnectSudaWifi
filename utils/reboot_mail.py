@@ -2,6 +2,7 @@ import smtplib
 import requests
 import re
 from email.mime.text import MIMEText
+from .project_config import *
 
 
 def get_ip():
@@ -19,20 +20,20 @@ def get_ip():
     return ip
 
 
-def send_mail():
+def send_mail(msg):
     # 设置服务器所需信息
-    mail_host = "发送邮箱服务器"
-    mail_user = "发送邮箱地址"
-    mail_pass = "Pk2TbTYRwUh69vrV"
-    sender = "发送邮箱地址"
-    receivers = ["接受邮箱地址", ]
+    mail_host = mailhost
+    mail_user = credentials[0]
+    mail_pass = credentials[1]
+    sender = fromaddr
+    receivers = toaddrs
 
     # 设置email信息
     # 邮件内容设置
     message = MIMEText('ip:%s\n不知道什么原因，您的机器已经启动，请检查是否有任务中断，请尽快处理！' % get_ip(), 'plain',
                        'utf-8')
     # 邮件主题
-    message['Subject'] = 'logger: 刀片机已经重新启动'
+    message['Subject'] = msg
     # 发送方信息
     message['From'] = sender
     # 接受方信息
@@ -50,10 +51,10 @@ def send_mail():
             sender, receivers, message.as_string())
         # 退出
         smtpObj.quit()
-        print('success')
+        logger.info('success')
     except smtplib.SMTPException as e:
-        print('error', e)  # 打印错误import smtplib
+        logger.info('error', e)  # 打印错误import smtplib
 
 
 if __name__ == "__main__":
-    send_mail()
+    send_mail("** 已经重新启动")
