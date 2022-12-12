@@ -2,20 +2,19 @@
 import os
 import logging.config
 
-# 登录信息
-# suda account information
-user = "学号"
-passwd = "密码"
-# email information
-mailhost = "邮箱服务器"
-fromaddr = ""
-toaddrs = ["接受邮件地址", ]
-subject = "logger: 自动连接苏大网"
-credentials = ("发送邮箱", "发送邮箱密码")  # 用户，密码
+# 苏大账号和密码
+user = ""  # 学号，例如 20214227000
+passwd = ""  # 密码
+
+# 邮箱服务器配置，以 111.com 邮箱为例
+mailhost = ""  # 邮箱服务器，例如 pop.111.com
+credentials = ("", "")  # 发送邮箱账号密码
+fromaddr = ""  # 发送邮箱，一般为 credentials[0] 相同
+toaddrs = ["接受邮件地址", ]  # 接受邮件的邮箱地址，例如 20214227000@stu.suda.edu.cn
+subject = "logger: 自动连接苏大网"  # 邮件主题
 # log 控制台输出等级
 level_log_console = "INFO"
-log_file_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, "project.log")
-
+log_file_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, "project.log")  # 日志地址
 
 # log 配置
 default_config = {
