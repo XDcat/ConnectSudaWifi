@@ -19,6 +19,8 @@
 |connect_suda_net.py               | 登录网关。      |
 | reboot_mail.py | 电脑重启后发送邮件。 |
 
+需要修改脚本中的账号密码。
+
 
 # 环境
 * python3
