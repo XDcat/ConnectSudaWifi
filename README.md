@@ -41,3 +41,10 @@
 # 重启后发送邮件通知
 @reboot /home/zlj/anaconda3/envs/Ponsol/bin/python /home/zlj/script/reboot_mail.py
 ```
+
+# 远程桌面软件
+推荐 Todesk，尽量不要使用 Microsoft Remote Desktop ！
+
+原因：
+Microsoft Remote Desktop 在连接时会改变系统分辨率，而不是串流软件，如果固定一台设备连接问题不大，当有多台设备远程访问时，会多次改变分辨率，
+而导致死机，这时只能通过重启的方式解决。
