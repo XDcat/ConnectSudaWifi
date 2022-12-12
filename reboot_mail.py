@@ -21,11 +21,11 @@ def get_ip():
 
 def send_mail():
     # 设置服务器所需信息
-    mail_host = "pop.111.com"
-    mail_user = "zenglianjie@111.com"
+    mail_host = "发送邮箱服务器"
+    mail_user = "发送邮箱地址"
     mail_pass = "Pk2TbTYRwUh69vrV"
-    sender = "zenglianjie@111.com"
-    receivers = ["514269236@qq.com", ]
+    sender = "发送邮箱地址"
+    receivers = ["接受邮箱地址", ]
 
     # 设置email信息
     # 邮件内容设置

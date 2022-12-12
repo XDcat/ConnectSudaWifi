@@ -10,14 +10,14 @@ import requests
 
 # 登录信息
 # user information
-user = "20214227076"
-passwd = "Zlj1784470039"
+user = "学号"
+passwd = "密码"
 # email information
-mailhost = "pop.111.com"
-fromaddr = "zenglianjie@111.com"
-toaddrs = ["514269236@qq.com", ]
+mailhost = "邮箱服务器"
+fromaddr = ""
+toaddrs = ["接受邮件地址", ]
 subject = "logger: 自动连接苏大网"
-credentials = ("zenglianjie@111.com", "Pk2TbTYRwUh69vrV")  # 用户，密码
+credentials = ("发送邮箱", "发送邮箱密码")  # 用户，密码
 # log 控制台输出等级
 level_log_console = "INFO"
 
