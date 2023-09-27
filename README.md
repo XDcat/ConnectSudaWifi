@@ -1,3 +1,9 @@
+```
+curl "http://10.9.1.3:801/eportal/?c=Portal&a=login&callback=dr1003&login_method=1&user_account=%2C0%2C替换为学号&user_password=替换为密码9&wlan_user_ip=$(curl -s "http://10.9.1.3/" | grep -oE "v[46]+ip='(\d{1,3}\.){3}\d{1,3}'" | awk -F"'" '{print $2}')"
+```
+
+
+
 > 免责声明：该脚本于 2020 年制作，已经稳定运行了几年，但肯定有不到位的地方。
 > 如有您觉得哪里不合适，欢迎 PR。
 
