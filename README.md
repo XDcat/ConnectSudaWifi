@@ -1,7 +1,5 @@
-> 免责声明：该脚本于 2020 年制作，已经稳定运行了几年，但肯定有不到位的地方。
 > 如有您觉得哪里不合适，欢迎 PR。
-
-如果对你有用，不妨加个⭐
+> 如果对你有用，不妨加个⭐
 
 # 连接苏大网络
 ## 代码
@@ -26,7 +24,7 @@
 ```bash
 * * * * * wget -q -O - "http://10.9.1.3:801/eportal/?c=Portal&a=login&callback=dr1003&login_method=1&user_account=%2C0%2C替换为学号&user_password=替换为密码&wlan_user_ip=$(wget -q -O - "http://10.9.1.3/" | grep -oE "v[46]+ip='(\d{1,3}\.){3}\d{1,3}'" | awk -F"'" '{print $2}' | head -n 1)"
 ```
-![路由器](./source/路由器 crontab.png)
+![路由器](https://github.com/XDcat/ConnectSudaWifi/blob/master/source/%E8%B7%AF%E7%94%B1%E5%99%A8%20crontab.png)
 > 具体如何使用 crontab 请自行搜索。
 
 # 远程桌面软件
